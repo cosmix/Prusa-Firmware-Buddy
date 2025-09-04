@@ -15,6 +15,7 @@ target_sources(
             link_content/static_file.cpp
             link_content/usb_files.cpp
             netdev.c
+            nhttp/cancel_object_command.cpp
             nhttp/common_selectors.cpp
             nhttp/file_command.cpp
             nhttp/file_command_marlin.cpp

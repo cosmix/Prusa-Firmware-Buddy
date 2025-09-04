@@ -5,6 +5,7 @@
 #include "../nhttp/headers.h"
 #include "../nhttp/gcode_upload.h"
 #include "../nhttp/job_command.h"
+#include "../nhttp/cancel_object_command.h"
 #include "../nhttp/send_json.h"
 #include "../nhttp/status_renderer.h"
 #include "../wui_api.h"
@@ -30,6 +31,7 @@ using std::optional;
 using std::string_view;
 using namespace handler;
 using namespace transfers;
+using nhttp::printer::CancelObjectCommand;
 using nhttp::printer::FileCommand;
 using nhttp::printer::FileInfo;
 using nhttp::printer::GcodeUpload;
@@ -171,6 +173,18 @@ Selector::Accepted PrusaLinkApiV1::accept(const RequestParser &parser, handler::
             return Accepted::Accepted;
         } else {
             out.next = StatusPage(Status::NoContent, parser);
+            return Accepted::Accepted;
+        }
+    } else if (suffix == "print/cancel_object") {
+        // Handle cancel object endpoint - POST  method
+        switch (parser.method) {
+        case Method::Post: {
+            size_t content_length = parser.content_length ? *parser.content_length : 0;
+            out.next = CancelObjectCommand(content_length, parser.can_keep_alive(), parser.accepts_json);
+            return Accepted::Accepted;
+        }
+        default:
+            out.next = StatusPage(Status::MethodNotAllowed, parser.status_page_handling(), parser.accepts_json);
             return Accepted::Accepted;
         }
     } else if (remove_prefix(suffix, "files").has_value()) {

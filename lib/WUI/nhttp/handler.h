@@ -30,6 +30,7 @@
 
 #include "file_info.h"
 #include "file_command.h"
+#include "cancel_object_command.h"
 #include "gcode_upload.h"
 #include "gcode_preview.h"
 #include "job_command.h"
@@ -151,6 +152,7 @@ namespace handler {
         printer::GcodeUpload,
         printer::GCodePreview,
         printer::JobCommand,
+        printer::CancelObjectCommand,
         printer::FileInfo,
         printer::FileCommand,
 #if NETWORKING_BENCHMARK_ENABLED
